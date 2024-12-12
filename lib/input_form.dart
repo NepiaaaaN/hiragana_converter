@@ -9,6 +9,8 @@ class InputForm extends StatefulWidget {
 
 class _InputFormState extends State<InputForm> {
   final _formKey = GlobalKey<FormState>();
+  // TextField Widget の入力文字や選択文字を取得、変更する機能を持つ
+  final _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class _InputFormState extends State<InputForm> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextFormField(
+              controller: _textEditingController,
               maxLines: 5,
               decoration: const InputDecoration(
                 hintText: '文章を入力してください',
@@ -38,7 +41,10 @@ class _InputFormState extends State<InputForm> {
               // GlobalKey から Form ウィジェットの State を取得
               final formState = _formKey.currentState!;
               // validate メソッドを呼び出すと、Form ウィジェットの子孫にある FormField ウィジェットでバリデーションが行われる
-              formState.validate();
+              if (!formState.validate()) {
+                return;
+              }
+              debugPrint('text = ${_textEditingController.text}');
             },
             child: const Text(
               '変換',
@@ -47,5 +53,13 @@ class _InputFormState extends State<InputForm> {
         ],
       ),
     );
+  }
+
+  // StatefulWidget が破棄される時に呼び出し
+  // TextEditingController クラスを破棄するために StatefulWidget を継承した
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 }
