@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+// jsonEncode関数参照のため
+import 'dart:convert';
+import 'package:hiragana_converter/data.dart';
+// "http"という別名を付ける
+import 'package:http/http.dart' as http;
 
 class InputForm extends StatefulWidget {
   const InputForm({super.key});
@@ -37,14 +42,37 @@ class _InputFormState extends State<InputForm> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               // GlobalKey から Form ウィジェットの State を取得
               final formState = _formKey.currentState!;
               // validate メソッドを呼び出すと、Form ウィジェットの子孫にある FormField ウィジェットでバリデーションが行われる
               if (!formState.validate()) {
                 return;
               }
-              debugPrint('text = ${_textEditingController.text}');
+              // HTTPリクエストのURLやリクエストヘッダを生成する
+              final url = Uri.parse('https://labs.goo.ne.jp/api/hiragana');
+              final headers = {'Content-Type': 'application/json'};
+
+              // 定義したリクエストオブジェクトを生成
+              final request = Request(
+                // 環境変数に登録した appId を参照(define/env.json)
+                appId: const String.fromEnvironment('appId'),
+                sentence: _textEditingController.text,
+              );
+
+              // http パッケージのpostメソッドを呼び出してWeb APIを呼び出す
+              // 非同期処理の完了を待ちたいので await を付与
+              final result = await http.post(
+                url,
+                headers: headers,
+                // toJsonメソッドでMapに変換し、そこからjsonEncode 関数でJSON文字列に変換
+                body: jsonEncode(request.toJson()),
+              );
+
+              final response = Response.fromJson(
+                jsonDecode(result.body) as Map<String, Object?>,
+              );
+              debugPrint('変換結果 : ${response.converted}');
             },
             child: const Text(
               '変換',
