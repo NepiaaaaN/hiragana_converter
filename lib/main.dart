@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hiragana_converter/app_state.dart';
+import 'package:hiragana_converter/app_notifier_provider.dart';
+import 'package:hiragana_converter/convert_result.dart';
+import 'package:hiragana_converter/input_form.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hiragana_converter/loading_indicator.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    // アプリのルートウィジェットを ProviderScope でラップ
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,54 +27,28 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomeScreen(title: 'Flutter Demo Home Page'),
+      home: const HomeScreen(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.title});
-  final String title;
+// build メソッドの第二引数で WidgetRef を受け取るため、ConsumerWidget に変更
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appState = ref.watch(appNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: const Text('Hiragana Converter'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: switch (appState) {
+        Loading() => const LoadingIndicator(),
+        Input() => const InputForm(),
+        Data(sentence: final sentence) => ConvertResult(sentence: sentence),
+      },
     );
   }
 }
