@@ -47,6 +47,7 @@ class _InputFormState extends ConsumerState<InputForm> {
                 return;
               }
               final sentence = _textEditingController.text;
+              // ここで convert を呼び出すと、AppState が Data に切り替わり、変換結果画面が表示される
               await ref.read(appNotifierProvider.notifier).convert(sentence);
             },
             child: const Text(
