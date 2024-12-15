@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hiragana_converter/app_notifier_provider.dart';
-// jsonEncode関数参照のため
-import 'dart:convert';
-import 'package:hiragana_converter/data.dart';
-// "http"という別名を付ける
-import 'package:http/http.dart' as http;
 
 class InputForm extends ConsumerStatefulWidget {
   const InputForm({super.key});
