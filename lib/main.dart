@@ -44,6 +44,8 @@ class HomeScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Hiragana Converter'),
       ),
+
+      /// [app_notifier_provider.dart] の状態が変化したら自動で画面が切り替わる
       body: switch (appState) {
         Loading() => const LoadingIndicator(),
         Input() => const InputForm(),

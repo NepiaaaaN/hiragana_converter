@@ -18,9 +18,31 @@ class Request {
   final String sentence;
   final String outputType;
 
+  /// toJson
+  /// 役割 : Dart オブジェクトをJSONに変換する
+  /// このクラス(Request) のインスタンスを JSON 形式のデータに変換する
+  ///
+  /// ```dart
+  /// final request = Request(appId: "1234", sentence: "Hello, world!");
+  /// final json = request.toJson();
+  /// print(json);
+  /// // 出力: { "app_id": "1234", "sentence": "Hello, world!", "output_type": "hiragana" }
+  /// ```
   Map<String, Object?> toJson() => _$RequestToJson(this);
 }
 
+/// fromJson
+/// 役割 : JSON データを使って Dart のオブジェクトを生成する
+/// _$ResponseFromJson(json) という自動生成された関数を使用して、具体的な変換処理を行う
+///
+/// ```dart
+/// final json = {
+///   "converted": "こんにちは"
+/// };
+/// final response = Response.fromJson(json);
+/// print(response.converted);
+/// // 出力: こんにちは
+/// ```
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Response {
   const Response({

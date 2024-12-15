@@ -13,6 +13,7 @@ class AppNotifier extends _$AppNotifier {
   AppState build() {
     // 初期状態を提供する build メソッドでは、Input オブジェクトを返す
     // アプリ起動時は入力状態であるため
+    // つまり、state のデフォルト値は Input となる
     return const Input();
   }
 
@@ -47,10 +48,12 @@ class AppNotifier extends _$AppNotifier {
       body: jsonEncode(request.toJson()),
     );
 
+    // jsonDecode で Map に変換してから、fromJson で Response オブジェクトに変換
     final result = Response.fromJson(
       jsonDecode(response.body) as Map<String, Object?>,
     );
 
+    /// state が変更されると、[main.dart] が変更を検知し、変換結果画面に画面を切り替える
     // アプリの状態を Web API のレスポンスを受け取った状態に変更するため
     // state に Data オブジェクトを代入
     state = Data(result.converted);
