@@ -1,16 +1,13 @@
 # hiragana_converter
 
-A new Flutter project.
+- 漢字やローマ字をひらがなに変換するアプリです。
+- [Flutter 実践開発](https://amzn.asia/d/ienYOvE) のサンプルです。
+- 自分の理解のためにコメントを付け足しています。
 
-## Getting Started
+## デモ動画
 
-This project is a starting point for a Flutter application.
+https://github.com/user-attachments/assets/ccd0c88e-37c5-49ea-9c9f-5efa79b7ce7c
 
-A few resources to get you started if this is your first Flutter project:
+## 使用 API
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [goo ラボ ひらがな化 API](https://labs.goo.ne.jp/api/jp/hiragana-translation/)
