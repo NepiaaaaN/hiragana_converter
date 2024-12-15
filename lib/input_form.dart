@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hiragana_converter/app_notifier_provider.dart';
 // jsonEncode関数参照のため
 import 'dart:convert';
 import 'package:hiragana_converter/data.dart';
 // "http"という別名を付ける
 import 'package:http/http.dart' as http;
 
-class InputForm extends StatefulWidget {
+class InputForm extends ConsumerStatefulWidget {
   const InputForm({super.key});
 
   @override
-  State<InputForm> createState() => _InputFormState();
+  ConsumerState<InputForm> createState() => _InputFormState();
 }
 
-class _InputFormState extends State<InputForm> {
+class _InputFormState extends ConsumerState<InputForm> {
   final _formKey = GlobalKey<FormState>();
   // TextField Widget の入力文字や選択文字を取得、変更する機能を持つ
   final _textEditingController = TextEditingController();
@@ -49,30 +51,8 @@ class _InputFormState extends State<InputForm> {
               if (!formState.validate()) {
                 return;
               }
-              // HTTPリクエストのURLやリクエストヘッダを生成する
-              final url = Uri.parse('https://labs.goo.ne.jp/api/hiragana');
-              final headers = {'Content-Type': 'application/json'};
-
-              // 定義したリクエストオブジェクトを生成
-              final request = Request(
-                // 環境変数に登録した appId を参照(define/env.json)
-                appId: const String.fromEnvironment('appId'),
-                sentence: _textEditingController.text,
-              );
-
-              // http パッケージのpostメソッドを呼び出してWeb APIを呼び出す
-              // 非同期処理の完了を待ちたいので await を付与
-              final result = await http.post(
-                url,
-                headers: headers,
-                // toJson メソッドで Map に変換し、そこから jsonEncode 関数で JSON 文字列に変換
-                body: jsonEncode(request.toJson()),
-              );
-
-              final response = Response.fromJson(
-                jsonDecode(result.body) as Map<String, Object?>,
-              );
-              debugPrint('変換結果 : ${response.converted}');
+              final sentence = _textEditingController.text;
+              await ref.read(appNotifierProvider.notifier).convert(sentence);
             },
             child: const Text(
               '変換',
