@@ -65,7 +65,7 @@ class _InputFormState extends State<InputForm> {
               final result = await http.post(
                 url,
                 headers: headers,
-                // toJsonメソッドでMapに変換し、そこからjsonEncode 関数でJSON文字列に変換
+                // toJson メソッドで Map に変換し、そこから jsonEncode 関数で JSON 文字列に変換
                 body: jsonEncode(request.toJson()),
               );
 
